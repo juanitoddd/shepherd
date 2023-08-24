@@ -24,10 +24,15 @@
       steps: [
         {
           text: '\n         <p>\n           Shepherd is a JavaScript library for guiding users through your app.\n           It uses <a href="https://floating-ui.com/" data-test-popper-link>Floating UI</a>,\n           another open source library, to render dialogs for each tour "step".\n         </p>\n        \n         <p>\n           Among many things, Floating UI makes sure your steps never end up off screen or cropped by an overflow.\n           (Try resizing your browser to see what we mean.)\n         </p>\n',
-          attachTo: {
-            element: '.hero-welcome',
-            on: 'bottom'
-          },
+          attachTo: [
+            {
+              element: '.hero-welcome',
+              on: 'bottom'
+            },
+            {
+              element: '.shepherd-logo'
+            }
+          ],
           buttons: [
             {
               action() {

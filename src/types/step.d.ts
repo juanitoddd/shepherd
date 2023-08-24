@@ -105,7 +105,7 @@ declare namespace Step {
      * If you omit the `on` portion of `attachTo`, the element will still be highlighted, but the tooltip will appear
      * in the middle of the screen, without an arrow pointing to the target.
      */
-    attachTo?: StepOptionsAttachTo;
+    attachTo?: StepOptionsAttachTo[];
 
     /**
      * An action on the page which should advance shepherd to the next step.

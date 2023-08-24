@@ -194,7 +194,7 @@ export class Step extends Evented {
 
   /**
    * Resolves attachTo options.
-   * @returns {{}|{element, on}}
+   * @returns [{}|{element, on}]
    * @private
    */
   _resolveAttachToOptions() {
@@ -298,15 +298,16 @@ export class Step extends Evented {
    * @private
    */
   _scrollTo(scrollToOptions) {
-    const { element } = this._getResolvedAttachToOptions();
+    const { element = [] } = this._getResolvedAttachToOptions();
+    console.log("🚀 ~ element:", element)
 
     if (isFunction(this.options.scrollToHandler)) {
-      this.options.scrollToHandler(element);
+      this.options.scrollToHandler(element[0]);
     } else if (
-      isElement(element) &&
-      typeof element.scrollIntoView === 'function'
+      isElement(element[0]) &&
+      typeof element[0].scrollIntoView === 'function'
     ) {
-      element.scrollIntoView(scrollToOptions);
+      element[0].scrollIntoView(scrollToOptions);
     }
   }
 
@@ -408,18 +409,20 @@ export class Step extends Evented {
     this.el.hidden = false;
 
     // start scrolling to target before showing the step
+    console.log("🚀 ~ this.options.scrollTo:", this.options.scrollTo)
     if (this.options.scrollTo) {
       setTimeout(() => {
         this._scrollTo(this.options.scrollTo);
       });
     }
-
+    
     this.el.hidden = false;
-
+        
     const content = this.shepherdElementComponent.getElement();
-    const target = this.target || document.body;
-    target.classList.add(`${this.classPrefix}shepherd-enabled`);
-    target.classList.add(`${this.classPrefix}shepherd-target`);
+    (this.target || [document.body]).forEach((target) => {
+      target.classList.add(`${this.classPrefix}shepherd-enabled`);
+      target.classList.add(`${this.classPrefix}shepherd-target`);
+    });
     content.classList.add('shepherd-enabled');
 
     this.trigger('show');
@@ -432,22 +435,23 @@ export class Step extends Evented {
    * @param step The step object that attaches to the element
    * @private
    */
-  _styleTargetElementForStep(step) {
-    const targetElement = step.target;
+  _styleTargetElementForStep(step) {    
+    step.target &&
+      step.target.forEach((targetElement) => {
+        if (!targetElement) {
+          return;
+        }
 
-    if (!targetElement) {
-      return;
-    }
+        if (step.options.highlightClass) {
+          targetElement.classList.add(step.options.highlightClass);
+        }
 
-    if (step.options.highlightClass) {
-      targetElement.classList.add(step.options.highlightClass);
-    }
+        targetElement.classList.remove('shepherd-target-click-disabled');
 
-    targetElement.classList.remove('shepherd-target-click-disabled');
-
-    if (step.options.canClickTarget === false) {
-      targetElement.classList.add('shepherd-target-click-disabled');
-    }
+        if (step.options.canClickTarget === false) {
+          targetElement.classList.add('shepherd-target-click-disabled');
+        }
+      });
   }
 
   /**
@@ -456,16 +460,16 @@ export class Step extends Evented {
    * @private
    */
   _updateStepTargetOnHide() {
-    const target = this.target || document.body;
+    (this.target || [document.body]).forEach((target) => {
+      if (this.options.highlightClass) {
+        target.classList.remove(this.options.highlightClass);
+      }
 
-    if (this.options.highlightClass) {
-      target.classList.remove(this.options.highlightClass);
-    }
-
-    target.classList.remove(
-      'shepherd-target-click-disabled',
-      `${this.classPrefix}shepherd-enabled`,
-      `${this.classPrefix}shepherd-target`
-    );
+      target.classList.remove(
+        'shepherd-target-click-disabled',
+        `${this.classPrefix}shepherd-enabled`,
+        `${this.classPrefix}shepherd-target`
+      );
+    });
   }
 }

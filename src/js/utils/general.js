@@ -21,29 +21,35 @@ export function normalizePrefix(prefix) {
  * `on` is a string position value
  */
 export function parseAttachTo(step) {
-  const options = step.options.attachTo || {};
-  const returnOpts = Object.assign({}, options);
+  if (!step.options.attachTo) return []
+  const options = Array.isArray(step.options.attachTo)
+    ? step.options.attachTo
+    : [step.options.attachTo] || [];
+  const returnOpts = [...options];
 
-  if (isFunction(returnOpts.element)) {
-    // Bind the callback to step so that it has access to the object, to enable running additional logic
-    returnOpts.element = returnOpts.element.call(step);
-  }
-
-  if (isString(returnOpts.element)) {
-    // Can't override the element in user opts reference because we can't
-    // guarantee that the element will exist in the future.
-    try {
-      returnOpts.element = document.querySelector(returnOpts.element);
-    } catch (e) {
-      // TODO
+  returnOpts.forEach((_element) => {
+    // Just do what we already do when it's a single element
+    if (isFunction(_element.element)) {
+      // Bind the callback to step so that it has access to the object, to enable running additional logic
+      _element.element = _element.element.call(step);
     }
-    if (!returnOpts.element) {
-      console.error(
-        `The element for this Shepherd step was not found ${options.element}`
-      );
-    }
-  }
 
+    if (isString(_element.element)) {
+      // Can't override the element in user opts reference because we can't
+      // guarantee that the element will exist in the future.
+      try {
+        _element.element = document.querySelector(_element.element);
+      } catch (e) {
+        // TODO
+      }
+      if (!_element.element) {
+        console.error(
+          `The element for this Shepherd step was not found ${_element.element}`
+        );
+      }
+    }
+  });
+  
   return returnOpts;
 }
 
