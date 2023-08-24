@@ -27,9 +27,8 @@ export function setupTooltip(step) {
     step.cleanup();
   }
 
-  const attachToOptions = step._getResolvedAttachToOptions();  
-
-  let targets = attachToOptions.map((item) => item.element);  
+  const attachToOptions = step._getResolvedAttachToOptions();
+  let targets = attachToOptions.map((item) => item.element);
   const floatingUIOptions = getFloatingUIOptions(attachToOptions, step);
   const shouldCenter = shouldCenterStep(attachToOptions);
 
@@ -194,6 +193,7 @@ export function getFloatingUIOptions(attachToOptions, step) {
       options.middleware.push(arrow({ element: arrowEl }));
     }
 
+    console.log("🚀 ~ attachToOptions:", attachToOptions)
     options.placement = attachToOptions.on;
   }
 

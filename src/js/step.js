@@ -298,16 +298,15 @@ export class Step extends Evented {
    * @private
    */
   _scrollTo(scrollToOptions) {
-    const { element = [] } = this._getResolvedAttachToOptions();
-    console.log("🚀 ~ element:", element)
-
+    const elements = this._getResolvedAttachToOptions();
+    const element = elements[0].element;
     if (isFunction(this.options.scrollToHandler)) {
-      this.options.scrollToHandler(element[0]);
+      this.options.scrollToHandler(element);
     } else if (
-      isElement(element[0]) &&
-      typeof element[0].scrollIntoView === 'function'
+      isElement(element) &&
+      typeof element.scrollIntoView === 'function'
     ) {
-      element[0].scrollIntoView(scrollToOptions);
+      element.scrollIntoView(scrollToOptions);
     }
   }
 
@@ -409,7 +408,6 @@ export class Step extends Evented {
     this.el.hidden = false;
 
     // start scrolling to target before showing the step
-    console.log("🚀 ~ this.options.scrollTo:", this.options.scrollTo)
     if (this.options.scrollTo) {
       setTimeout(() => {
         this._scrollTo(this.options.scrollTo);
