@@ -204,7 +204,7 @@ export class Step extends Evented {
 
   /**
    * A selector for resolved attachTo options.
-   * @returns {{}|{element, on}}
+   * @returns {[{}|{element, on}]}
    * @private
    */
   _getResolvedAttachToOptions() {
@@ -274,14 +274,15 @@ export class Step extends Evented {
   _createTooltipContent() {
     const descriptionId = `${this.id}-description`;
     const labelId = `${this.id}-label`;
-
+    const step = this;
+    step.options.attachTo = this._getResolvedAttachToOptions();
     this.shepherdElementComponent = new ShepherdElement({
       target: this.tour.options.stepsContainer || document.body,
       props: {
         classPrefix: this.classPrefix,
         descriptionId,
         labelId,
-        step: this,
+        step,
         styles: this.styles
       }
     });
@@ -299,14 +300,17 @@ export class Step extends Evented {
    */
   _scrollTo(scrollToOptions) {
     const elements = this._getResolvedAttachToOptions();
-    const element = elements[0].element;
-    if (isFunction(this.options.scrollToHandler)) {
-      this.options.scrollToHandler(element);
-    } else if (
-      isElement(element) &&
-      typeof element.scrollIntoView === 'function'
-    ) {
-      element.scrollIntoView(scrollToOptions);
+    if (elements[0]) {
+      const element = elements[0].element;
+      console.log("🚀 ~ element:", element)
+      if (isFunction(this.options.scrollToHandler)) {
+        this.options.scrollToHandler(element);
+      } else if (
+        isElement(element) &&
+        typeof element.scrollIntoView === 'function'
+      ) {
+        element.scrollIntoView(scrollToOptions);
+      }
     }
   }
 
@@ -413,9 +417,9 @@ export class Step extends Evented {
         this._scrollTo(this.options.scrollTo);
       });
     }
-    
+
     this.el.hidden = false;
-        
+
     const content = this.shepherdElementComponent.getElement();
     (this.target || [document.body]).forEach((target) => {
       target.classList.add(`${this.classPrefix}shepherd-enabled`);
@@ -433,7 +437,7 @@ export class Step extends Evented {
    * @param step The step object that attaches to the element
    * @private
    */
-  _styleTargetElementForStep(step) {    
+  _styleTargetElementForStep(step) {
     step.target &&
       step.target.forEach((targetElement) => {
         if (!targetElement) {

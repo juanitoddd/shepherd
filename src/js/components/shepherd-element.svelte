@@ -28,7 +28,7 @@
     lastFocusableElement = focusableElements[focusableElements.length - 1];
   });
 
-  afterUpdate(() => {
+  afterUpdate(() => {    
     if(classes !== step.options.classes) {
       updateDynamicClasses();
     }
@@ -205,7 +205,7 @@
   role="dialog"
   tabindex="0"
 >
-    {#if step.options.arrow && step.options.attachTo && step.options.attachTo.element && step.options.attachTo.on}
+    {#if step.options.arrow && step.options.attachTo && step.options.attachTo[0]?.element && step.options.attachTo[0]?.on}
       <div class="shepherd-arrow" data-popper-arrow></div>
     {/if}
   <ShepherdContent

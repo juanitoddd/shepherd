@@ -28,25 +28,29 @@ export function setupTooltip(step) {
   }
 
   const attachToOptions = step._getResolvedAttachToOptions();
-  let targets = attachToOptions.map((item) => item.element);
+  console.log("🚀 ~ attachToOptions:", attachToOptions)
+
+  let targets = attachToOptions;
   const floatingUIOptions = getFloatingUIOptions(attachToOptions, step);
-  const shouldCenter = shouldCenterStep(attachToOptions);
+  const shouldCenter = shouldCenterStep(attachToOptions[0]);
 
   if (shouldCenter) {
-    targets = [document.body];
+    targets = [{ element: document.body }];
     const content = step.shepherdElementComponent.getElement();
     content.classList.add('shepherd-centered');
   }
 
-  const cleanup = targets.map((target) =>
-    autoUpdate(target, step.el, () => {
+  const cleanup = targets.map((option) =>
+    autoUpdate(option.element, step.el, () => {
       // The element might have already been removed by the end of the tour.
       if (!step.el) {
         step.cleanup();
         return;
       }
 
-      setPosition(target, step, floatingUIOptions, shouldCenter);
+      if (option.on) {
+        setPosition(option.element, step, floatingUIOptions, shouldCenter);
+      }
     })
   );
 
@@ -177,7 +181,7 @@ export function getFloatingUIOptions(attachToOptions, step) {
 
   const arrowEl = addArrow(step);
 
-  const shouldCenter = shouldCenterStep(attachToOptions);
+  const shouldCenter = shouldCenterStep(attachToOptions[0]);
 
   if (!shouldCenter) {
     options.middleware.push(
@@ -192,11 +196,8 @@ export function getFloatingUIOptions(attachToOptions, step) {
     if (arrowEl) {
       options.middleware.push(arrow({ element: arrowEl }));
     }
-
-    console.log("🚀 ~ attachToOptions:", attachToOptions)
-    options.placement = attachToOptions.on;
+    options.placement = attachToOptions[0].on;
   }
-
   return merge(step.options.floatingUIOptions || {}, options);
 }
 
