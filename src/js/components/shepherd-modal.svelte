@@ -44,10 +44,9 @@
     scrollParent,
     targetElements
   ) {
-    if (targetElements) {
-      if (!Array.isArray(targetElements)) targetElements = [targetElements];
-      const elements = [];
-      targetElements.forEach((el) => {
+    const elements = [];
+    targetElements.forEach((el) => {
+      if (el) {
         const { y, height } = _getVisibleHeight(el, scrollParent);
         const { x, width, left } = el.getBoundingClientRect();
 
@@ -58,14 +57,15 @@
           x: (x || left) - modalOverlayOpeningPadding,
           y: y - modalOverlayOpeningPadding
         });
-      });
-      openingProperties = {
-        elements,
-        r: modalOverlayOpeningRadius
-      };
-    } else {
-      closeModalOpening();
-    }
+      } else {
+        console.log('🚀 ~ targetElements:', targetElements);
+        closeModalOpening();
+      }
+    });
+    openingProperties = {
+      elements,
+      r: modalOverlayOpeningRadius
+    };
   }
 
   /**
