@@ -771,10 +771,12 @@ describe('Tour | Step', () => {
 
       instance.start();
 
-      expect(instance.getById('step2')._getResolvedAttachToOptions()).toEqual({
-        element: undefined,
-        on: 'auto'
-      });
+      expect(instance.getById('step2')._getResolvedAttachToOptions()).toEqual([
+        {
+          element: undefined,
+          on: 'auto'
+        }
+      ]);
     });
   });
 });
