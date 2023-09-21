@@ -16,7 +16,7 @@ export function normalizePrefix(prefix) {
 /**
  * Resolves attachTo options, converting element option value to a qualified HTMLElement.
  * @param {Step} step The step instance
- * @returns {{}|{element, on}}
+ * @returns {[{}]|[{element, on}]}
  * `element` is a qualified HTML Element
  * `on` is a string position value
  */
