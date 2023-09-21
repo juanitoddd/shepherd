@@ -20,8 +20,8 @@ export function normalizePrefix(prefix) {
  * `element` is a qualified HTML Element
  * `on` is a string position value
  */
-export function parseAttachTo(step) {  
-  if (!step.options.attachTo) return [{}];
+export function parseAttachTo(step) {
+  if (!step.options.attachTo) return [{ element: undefined }];
   const options = Array.isArray(step.options.attachTo)
     ? step.options.attachTo
     : [step.options.attachTo] || [];

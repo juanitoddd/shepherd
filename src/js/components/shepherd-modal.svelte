@@ -58,7 +58,6 @@
           y: y - modalOverlayOpeningPadding
         });
       } else {
-        console.log('🚀 ~ targetElements:', targetElements);
         closeModalOpening();
       }
     });

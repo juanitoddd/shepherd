@@ -302,7 +302,6 @@ export class Step extends Evented {
     const elements = this._getResolvedAttachToOptions();
     if (elements[0]) {
       const element = elements[0].element;
-      console.log("🚀 ~ element:", element)
       if (isFunction(this.options.scrollToHandler)) {
         this.options.scrollToHandler(element);
       } else if (
@@ -421,7 +420,7 @@ export class Step extends Evented {
     this.el.hidden = false;
 
     const content = this.shepherdElementComponent.getElement();
-    (this.target || [document.body]).forEach((target) => {
+    this.target.forEach((target) => {
       target.classList.add(`${this.classPrefix}shepherd-enabled`);
       target.classList.add(`${this.classPrefix}shepherd-target`);
     });

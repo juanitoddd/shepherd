@@ -28,7 +28,6 @@ export function setupTooltip(step) {
   }
 
   const attachToOptions = step._getResolvedAttachToOptions();
-  console.log("🚀 ~ attachToOptions:", attachToOptions)
 
   let targets = attachToOptions;
   const floatingUIOptions = getFloatingUIOptions(attachToOptions, step);
@@ -51,12 +50,15 @@ export function setupTooltip(step) {
       if (option.on) {
         setPosition(option.element, step, floatingUIOptions, shouldCenter);
       }
+      if (option.element === document.body) {
+        setPosition(option.element, step, floatingUIOptions, shouldCenter);
+      }
     })
   );
 
   step.cleanup = (...args) => cleanup.forEach((i) => i(...args));
 
-  step.target = attachToOptions.map((item) => item.element);
+  step.target = targets.map((item) => item.element);
 
   return floatingUIOptions;
 }
