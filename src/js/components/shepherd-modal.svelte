@@ -46,7 +46,7 @@
   ) {
     const elements = [];
     targetElements.forEach((el) => {
-      if (el) {
+      if (el && el !== document.body) {
         const { y, height } = _getVisibleHeight(el, scrollParent);
         const { x, width, left } = el.getBoundingClientRect();
 
